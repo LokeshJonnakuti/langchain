@@ -146,7 +146,7 @@ class EmbaasBlobLoader(BaseEmbaasLoader, BaseBlobParser):
             "Content-Type": "application/json",
         }
 
-        response = requests.post(self.api_url, headers=headers, json=payload)
+        response = requests.post(self.api_url, headers=headers, json=payload, timeout=60)
         response.raise_for_status()
 
         parsed_response = response.json()

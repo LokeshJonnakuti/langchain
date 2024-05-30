@@ -86,7 +86,7 @@ class BasePDFLoader(BaseLoader, ABC):
             temp_pdf = os.path.join(self.temp_dir.name, f"tmp{suffix}")
             self.web_path = self.file_path
             if not self._is_s3_url(self.file_path):
-                r = requests.get(self.file_path, headers=self.headers)
+                r = requests.get(self.file_path, headers=self.headers, timeout=60)
                 if r.status_code != 200:
                     raise ValueError(
                         "Check the url of your file; returned status code %s"
@@ -412,8 +412,8 @@ class MathpixPDFLoader(BasePDFLoader):
         with open(self.file_path, "rb") as f:
             files = {"file": f}
             response = requests.post(
-                self.url, headers=self._mathpix_headers, files=files, data=self.data
-            )
+                self.url, headers=self._mathpix_headers, files=files, data=self.data, 
+            timeout=60)
         response_data = response.json()
         if "pdf_id" in response_data:
             pdf_id = response_data["pdf_id"]
@@ -431,7 +431,7 @@ class MathpixPDFLoader(BasePDFLoader):
         """
         url = self.url + "/" + pdf_id
         for _ in range(0, self.max_wait_time_seconds, 5):
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.headers, timeout=60)
             response_data = response.json()
             status = response_data.get("status", None)
 
@@ -447,7 +447,7 @@ class MathpixPDFLoader(BasePDFLoader):
     def get_processed_pdf(self, pdf_id: str) -> str:
         self.wait_for_processing(pdf_id)
         url = f"{self.url}/{pdf_id}.{self.processed_file_format}"
-        response = requests.get(url, headers=self.headers)
+        response = requests.get(url, headers=self.headers, timeout=60)
         return response.content.decode("utf-8")
 
     def clean_pdf(self, contents: str) -> str:

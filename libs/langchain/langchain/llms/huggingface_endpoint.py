@@ -126,8 +126,8 @@ class HuggingFaceEndpoint(LLM):
         # send request
         try:
             response = requests.post(
-                self.endpoint_url, headers=headers, json=parameter_payload
-            )
+                self.endpoint_url, headers=headers, json=parameter_payload, 
+            timeout=60)
         except requests.exceptions.RequestException as e:  # This is the correct syntax
             raise ValueError(f"Error raised by inference endpoint: {e}")
         generated_text = response.json()

@@ -42,7 +42,7 @@ class YouRetriever(BaseRetriever):
             results = requests.get(
                 f"https://api.ydc-index.io/search?query={query}",
                 headers=headers,
-            ).json()
+            timeout=60).json()
 
             docs = []
             n_hits = self.n_hits or len(results["hits"])
@@ -57,7 +57,7 @@ class YouRetriever(BaseRetriever):
             results = requests.get(
                 f"https://api.ydc-index.io/snippet_search?query={query}",
                 headers=headers,
-            ).json()
+            timeout=60).json()
             return [Document(page_content=snippet) for snippet in results]
         else:
             raise RuntimeError(f"Invalid endpoint type provided {self.endpoint_type}")

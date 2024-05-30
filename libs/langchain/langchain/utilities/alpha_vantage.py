@@ -43,7 +43,7 @@ class AlphaVantageAPIWrapper(BaseModel):
                 "to_currency": to_currency,
                 "apikey": self.alphavantage_api_key,
             },
-        )
+        timeout=60)
         response.raise_for_status()
         data = response.json()
 
