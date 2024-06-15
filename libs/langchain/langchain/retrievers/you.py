@@ -4,6 +4,7 @@ from langchain.callbacks.manager import CallbackManagerForRetrieverRun
 from langchain.pydantic_v1 import root_validator
 from langchain.schema import BaseRetriever, Document
 from langchain.utils import get_from_dict_or_env
+from security import safe_requests
 
 
 class YouRetriever(BaseRetriever):
@@ -35,12 +36,10 @@ class YouRetriever(BaseRetriever):
     def _get_relevant_documents(
         self, query: str, *, run_manager: CallbackManagerForRetrieverRun
     ) -> List[Document]:
-        import requests
 
         headers = {"X-API-Key": self.ydc_api_key}
         if self.endpoint_type == "web":
-            results = requests.get(
-                f"https://api.ydc-index.io/search?query={query}",
+            results = safe_requests.get(f"https://api.ydc-index.io/search?query={query}",
                 headers=headers,
             ).json()
 
@@ -54,8 +53,7 @@ class YouRetriever(BaseRetriever):
                         return docs
             return docs
         elif self.endpoint_type == "snippet":
-            results = requests.get(
-                f"https://api.ydc-index.io/snippet_search?query={query}",
+            results = safe_requests.get(f"https://api.ydc-index.io/snippet_search?query={query}",
                 headers=headers,
             ).json()
             return [Document(page_content=snippet) for snippet in results]

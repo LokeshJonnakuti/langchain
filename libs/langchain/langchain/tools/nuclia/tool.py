@@ -23,6 +23,7 @@ from langchain.callbacks.manager import (
 )
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain.tools.base import BaseTool
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -199,8 +200,7 @@ class NucliaUnderstandingAPI(BaseTool):
                 "`pip install protobuf`."
             ) from e
 
-        res = requests.get(
-            self._config["BACKEND"] + "/processing/pull",
+        res = safe_requests.get(self._config["BACKEND"] + "/processing/pull",
             headers={
                 "x-stf-nuakey": "Bearer " + self._config["NUA_KEY"],
             },

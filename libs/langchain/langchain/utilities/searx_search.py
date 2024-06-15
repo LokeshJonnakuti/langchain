@@ -131,7 +131,6 @@ import json
 from typing import Any, Dict, List, Optional
 
 import aiohttp
-import requests
 
 from langchain.pydantic_v1 import (
     BaseModel,
@@ -142,6 +141,7 @@ from langchain.pydantic_v1 import (
     validator,
 )
 from langchain.utils import get_from_dict_or_env
+from security import safe_requests
 
 
 def _get_default_params() -> dict:
@@ -266,8 +266,7 @@ class SearxSearchWrapper(BaseModel):
 
     def _searx_api_query(self, params: dict) -> SearxResults:
         """Actual request to searx API."""
-        raw_result = requests.get(
-            self.searx_host,
+        raw_result = safe_requests.get(self.searx_host,
             headers=self.headers,
             params=params,
             verify=not self.unsecure,

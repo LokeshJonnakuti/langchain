@@ -25,6 +25,7 @@ from langchain.document_loaders.parsers.pdf import (
 )
 from langchain.document_loaders.unstructured import UnstructuredFileLoader
 from langchain.utils import get_from_dict_or_env
+from security import safe_requests
 
 logger = logging.getLogger(__file__)
 
@@ -86,7 +87,7 @@ class BasePDFLoader(BaseLoader, ABC):
             temp_pdf = os.path.join(self.temp_dir.name, f"tmp{suffix}")
             self.web_path = self.file_path
             if not self._is_s3_url(self.file_path):
-                r = requests.get(self.file_path, headers=self.headers)
+                r = safe_requests.get(self.file_path, headers=self.headers)
                 if r.status_code != 200:
                     raise ValueError(
                         "Check the url of your file; returned status code %s"
@@ -149,7 +150,7 @@ class PyPDFLoader(BasePDFLoader):
     ) -> None:
         """Initialize with a file path."""
         try:
-            import pypdf  # noqa:F401
+            pass
         except ImportError:
             raise ImportError(
                 "pypdf package not found, please install it with " "`pip install pypdf`"
@@ -264,7 +265,7 @@ class PDFMinerLoader(BasePDFLoader):
                                document. Otherwise, return one document per page.
         """
         try:
-            from pdfminer.high_level import extract_text  # noqa:F401
+            pass
         except ImportError:
             raise ImportError(
                 "`pdfminer` package not found, please install it with "
@@ -294,7 +295,7 @@ class PDFMinerPDFasHTMLLoader(BasePDFLoader):
     def __init__(self, file_path: str, *, headers: Optional[Dict] = None):
         """Initialize with a file path."""
         try:
-            from pdfminer.high_level import extract_text_to_fp  # noqa:F401
+            pass
         except ImportError:
             raise ImportError(
                 "`pdfminer` package not found, please install it with "
@@ -335,7 +336,7 @@ class PyMuPDFLoader(BasePDFLoader):
     ) -> None:
         """Initialize with a file path."""
         try:
-            import fitz  # noqa:F401
+            pass
         except ImportError:
             raise ImportError(
                 "`PyMuPDF` package not found, please install it with "
@@ -431,7 +432,7 @@ class MathpixPDFLoader(BasePDFLoader):
         """
         url = self.url + "/" + pdf_id
         for _ in range(0, self.max_wait_time_seconds, 5):
-            response = requests.get(url, headers=self.headers)
+            response = safe_requests.get(url, headers=self.headers)
             response_data = response.json()
             status = response_data.get("status", None)
 
@@ -447,7 +448,7 @@ class MathpixPDFLoader(BasePDFLoader):
     def get_processed_pdf(self, pdf_id: str) -> str:
         self.wait_for_processing(pdf_id)
         url = f"{self.url}/{pdf_id}.{self.processed_file_format}"
-        response = requests.get(url, headers=self.headers)
+        response = safe_requests.get(url, headers=self.headers)
         return response.content.decode("utf-8")
 
     def clean_pdf(self, contents: str) -> str:
@@ -495,7 +496,7 @@ class PDFPlumberLoader(BasePDFLoader):
     ) -> None:
         """Initialize with a file path."""
         try:
-            import pdfplumber  # noqa:F401
+            pass
         except ImportError:
             raise ImportError(
                 "pdfplumber package not found, please install it with "

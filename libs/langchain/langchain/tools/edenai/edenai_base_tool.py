@@ -10,6 +10,7 @@ from langchain.callbacks.manager import CallbackManagerForToolRun
 from langchain.pydantic_v1 import root_validator
 from langchain.tools.base import BaseTool
 from langchain.utils import get_from_dict_or_env
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -123,7 +124,7 @@ class EdenaiTool(BaseTool):
             "User-Agent": self.get_user_agent(),
         }
 
-        response = requests.get(url, headers=headers)
+        response = safe_requests.get(url, headers=headers)
 
         self._raise_on_error(response)
 

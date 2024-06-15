@@ -5,11 +5,10 @@ from abc import ABC
 from typing import List
 from urllib.parse import urlparse
 
-import requests
-
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 from langchain.document_loaders.unstructured import UnstructuredFileLoader
+from security import safe_requests
 
 
 class Docx2txtLoader(BaseLoader, ABC):
@@ -27,7 +26,7 @@ class Docx2txtLoader(BaseLoader, ABC):
 
         # If the file is a web path, download it to a temporary file, and use that
         if not os.path.isfile(self.file_path) and self._is_valid_url(self.file_path):
-            r = requests.get(self.file_path)
+            r = safe_requests.get(self.file_path)
 
             if r.status_code != 200:
                 raise ValueError(
@@ -100,7 +99,6 @@ class UnstructuredWordDocumentLoader(UnstructuredFileLoader):
         # system dependency isn't installed. If it's not installed, we'll just
         # check the file extension
         try:
-            import magic  # noqa: F401
 
             is_doc = detect_filetype(self.file_path) == FileType.DOC
         except ImportError:

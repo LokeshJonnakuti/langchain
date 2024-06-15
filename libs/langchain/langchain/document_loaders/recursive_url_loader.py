@@ -14,11 +14,10 @@ from typing import (
     Union,
 )
 
-import requests
-
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 from langchain.utils.html import extract_sub_links
+from security import safe_requests
 
 if TYPE_CHECKING:
     import aiohttp
@@ -160,7 +159,7 @@ class RecursiveUrlLoader(BaseLoader):
         # Get all links that can be accessed from the current URL
         visited.add(url)
         try:
-            response = requests.get(url, timeout=self.timeout, headers=self.headers)
+            response = safe_requests.get(url, timeout=self.timeout, headers=self.headers)
             if self.check_response_status and 400 <= response.status_code <= 599:
                 raise ValueError(f"Received HTTP status {response.status_code}")
         except Exception as e:

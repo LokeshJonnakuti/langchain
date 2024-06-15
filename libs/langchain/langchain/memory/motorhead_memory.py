@@ -4,6 +4,7 @@ import requests
 
 from langchain.memory.chat_memory import BaseChatMemory
 from langchain.schema.messages import get_buffer_string
+from security import safe_requests
 
 MANAGED_URL = "https://api.getmetal.io/v1/motorhead"
 # LOCAL_URL = "http://localhost:8080"
@@ -44,8 +45,7 @@ class MotorheadMemory(BaseChatMemory):
         return headers
 
     async def init(self) -> None:
-        res = requests.get(
-            f"{self.url}/sessions/{self.session_id}/memory",
+        res = safe_requests.get(f"{self.url}/sessions/{self.session_id}/memory",
             timeout=self.timeout,
             headers=self.__get_headers(),
         )

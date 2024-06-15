@@ -15,8 +15,6 @@ from typing import (
     Union,
 )
 
-import requests
-
 from langchain.adapters.openai import convert_dict_to_message, convert_message_to_dict
 from langchain.callbacks.manager import (
     CallbackManagerForLLMRun,
@@ -28,6 +26,7 @@ from langchain.schema import ChatGeneration, ChatResult
 from langchain.schema.messages import AIMessageChunk, BaseMessage
 from langchain.schema.output import ChatGenerationChunk
 from langchain.utils import get_from_dict_or_env
+from security import safe_requests
 
 DEFAULT_API_BASE = "https://api.konko.ai/v1"
 DEFAULT_MODEL = "meta-llama/Llama-2-13b-chat-hf"
@@ -155,7 +154,7 @@ class ChatKonko(BaseChatModel):
         if openai_api_key:
             headers["X-OpenAI-Api-Key"] = openai_api_key
 
-        models_response = requests.get(models_url, headers=headers)
+        models_response = safe_requests.get(models_url, headers=headers)
 
         if models_response.status_code != 200:
             raise ValueError(

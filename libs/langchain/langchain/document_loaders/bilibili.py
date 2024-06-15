@@ -3,10 +3,9 @@ import re
 import warnings
 from typing import List, Tuple
 
-import requests
-
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
+from security import safe_requests
 
 
 class BiliBiliLoader(BaseLoader):
@@ -62,7 +61,7 @@ class BiliBiliLoader(BaseLoader):
             sub_url = sub_list[0]["subtitle_url"]
             if not sub_url.startswith("http"):
                 sub_url = "https:" + sub_url
-            result = requests.get(sub_url)
+            result = safe_requests.get(sub_url)
             raw_sub_titles = json.loads(result.content)["body"]
             raw_transcript = " ".join([c["content"] for c in raw_sub_titles])
 
