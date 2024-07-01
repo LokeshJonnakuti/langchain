@@ -1,9 +1,9 @@
-import random
 from datetime import datetime, timedelta
 from typing import List
 
 from langchain.schema import BaseOutputParser, OutputParserException
 from langchain.utils import comma_list
+import secrets
 
 
 def _generate_random_datetime_strings(
@@ -22,7 +22,7 @@ def _generate_random_datetime_strings(
     examples = []
     delta = end_date - start_date
     for i in range(n):
-        random_delta = random.uniform(0, delta.total_seconds())
+        random_delta = secrets.SystemRandom().uniform(0, delta.total_seconds())
         dt = start_date + timedelta(seconds=random_delta)
         date_string = dt.strftime(pattern)
         examples.append(date_string)
