@@ -215,7 +215,7 @@ class TextGen(LLM):
             params = self._get_parameters(stop)
             request = params.copy()
             request["prompt"] = prompt
-            response = requests.post(url, json=request)
+            response = requests.post(url, json=request, timeout=60)
 
             if response.status_code == 200:
                 result = response.json()["results"][0]["text"]
@@ -261,7 +261,7 @@ class TextGen(LLM):
             params = self._get_parameters(stop)
             request = params.copy()
             request["prompt"] = prompt
-            response = requests.post(url, json=request)
+            response = requests.post(url, json=request, timeout=60)
 
             if response.status_code == 200:
                 result = response.json()["results"][0]["text"]

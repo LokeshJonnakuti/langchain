@@ -39,7 +39,7 @@ class BingSearchAPIWrapper(BaseModel):
             self.bing_search_url,
             headers=headers,
             params=params,  # type: ignore
-        )
+        timeout=60)
         response.raise_for_status()
         search_results = response.json()
         return search_results["webPages"]["value"]

@@ -77,7 +77,7 @@ class ImageCaptionLoader(BaseLoader):
             if isinstance(image, bytes):
                 image = Image.open(BytesIO(image)).convert("RGB")
             elif image.startswith("http://") or image.startswith("https://"):
-                image = Image.open(requests.get(image, stream=True).raw).convert("RGB")
+                image = Image.open(requests.get(image, stream=True, timeout=60).raw).convert("RGB")
             else:
                 image = Image.open(image).convert("RGB")
         except Exception:

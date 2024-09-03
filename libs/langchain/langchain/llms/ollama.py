@@ -156,7 +156,7 @@ class _OllamaCommon(BaseLanguageModel):
             headers={"Content-Type": "application/json"},
             json={"prompt": prompt, **params},
             stream=True,
-        )
+        timeout=60)
         response.encoding = "utf-8"
         if response.status_code != 200:
             optional_detail = response.json().get("error")

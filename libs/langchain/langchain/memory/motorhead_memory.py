@@ -91,4 +91,4 @@ class MotorheadMemory(BaseChatMemory):
 
     def delete_session(self) -> None:
         """Delete a session"""
-        requests.delete(f"{self.url}/sessions/{self.session_id}/memory")
+        requests.delete(f"{self.url}/sessions/{self.session_id}/memory", timeout=60)

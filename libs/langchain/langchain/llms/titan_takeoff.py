@@ -99,7 +99,7 @@ class TitanTakeoff(LLM):
             url = f"{self.base_url}/generate"
             params = {"text": prompt, **self._default_params}
 
-            response = requests.post(url, json=params)
+            response = requests.post(url, json=params, timeout=60)
             response.raise_for_status()
             response.encoding = "utf-8"
             text = ""
@@ -146,7 +146,7 @@ class TitanTakeoff(LLM):
         url = f"{self.base_url}/generate_stream"
         params = {"text": prompt, **self._default_params}
 
-        response = requests.post(url, json=params, stream=True)
+        response = requests.post(url, json=params, stream=True, timeout=60)
         response.encoding = "utf-8"
         for text in response.iter_content(chunk_size=1, decode_unicode=True):
             if text:

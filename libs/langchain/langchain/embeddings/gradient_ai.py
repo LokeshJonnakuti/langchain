@@ -296,8 +296,8 @@ class TinyAsyncGradientEmbeddingClient:  #: :meta private:
         self, model: str, batch_texts: List[str]
     ) -> List[List[float]]:
         response = requests.post(
-            **self._kwargs_post_request(model=model, texts=batch_texts)
-        )
+            **self._kwargs_post_request(model=model, texts=batch_texts), 
+        timeout=60)
         if response.status_code != 200:
             raise Exception(
                 f"Gradient returned an unexpected response with status "

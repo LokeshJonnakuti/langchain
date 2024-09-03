@@ -136,7 +136,7 @@ class LangChainTracerV1(BaseTracer):
                 endpoint,
                 data=v1_run.json(),
                 headers=self._headers,
-            )
+            timeout=60)
             raise_for_status_with_text(response)
         except Exception as e:
             logger.warning(f"Failed to persist run: {e}")
@@ -150,7 +150,7 @@ class LangChainTracerV1(BaseTracer):
                 f"{self._endpoint}/sessions",
                 data=session_create.json(),
                 headers=self._headers,
-            )
+            timeout=60)
             session = TracerSessionV1(id=r.json()["id"], **session_create.dict())
         except Exception as e:
             logger.warning(f"Failed to create session, using default session: {e}")
@@ -163,7 +163,7 @@ class LangChainTracerV1(BaseTracer):
             url = f"{self._endpoint}/sessions"
             if session_name:
                 url += f"?name={session_name}"
-            r = requests.get(url, headers=self._headers)
+            r = requests.get(url, headers=self._headers, timeout=60)
 
             tracer_session = TracerSessionV1(**r.json()[0])
         except Exception as e:

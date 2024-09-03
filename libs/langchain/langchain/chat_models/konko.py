@@ -155,7 +155,7 @@ class ChatKonko(BaseChatModel):
         if openai_api_key:
             headers["X-OpenAI-Api-Key"] = openai_api_key
 
-        models_response = requests.get(models_url, headers=headers)
+        models_response = requests.get(models_url, headers=headers, timeout=60)
 
         if models_response.status_code != 200:
             raise ValueError(

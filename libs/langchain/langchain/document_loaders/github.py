@@ -103,7 +103,7 @@ class GitHubIssuesLoader(BaseGitHubLoader):
         """
         url: Optional[str] = self.url
         while url:
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.headers, timeout=60)
             response.raise_for_status()
             issues = response.json()
             for issue in issues:

@@ -82,7 +82,7 @@ class EtherscanLoader(BaseLoader):
             f"&offset={self.offset}&sort={self.sort}&apikey={self.api_key}"
         )
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             print("Error occurred while making the request:", e)
@@ -104,7 +104,7 @@ class EtherscanLoader(BaseLoader):
         )
 
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             print("Error occurred while making the request:", e)
@@ -119,7 +119,7 @@ class EtherscanLoader(BaseLoader):
         )
 
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             print("Error occurred while making the request:", e)
@@ -142,7 +142,7 @@ class EtherscanLoader(BaseLoader):
         )
 
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             print("Error occurred while making the request:", e)
@@ -165,7 +165,7 @@ class EtherscanLoader(BaseLoader):
         )
 
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             print("Error occurred while making the request:", e)
@@ -188,7 +188,7 @@ class EtherscanLoader(BaseLoader):
         )
 
         try:
-            response = requests.get(url)
+            response = requests.get(url, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             print("Error occurred while making the request:", e)
