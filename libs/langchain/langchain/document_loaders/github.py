@@ -2,12 +2,11 @@ from abc import ABC
 from datetime import datetime
 from typing import Dict, Iterator, List, Literal, Optional, Union
 
-import requests
-
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
 from langchain.pydantic_v1 import BaseModel, root_validator, validator
 from langchain.utils import get_from_dict_or_env
+from security import safe_requests
 
 
 class BaseGitHubLoader(BaseLoader, BaseModel, ABC):
@@ -103,7 +102,7 @@ class GitHubIssuesLoader(BaseGitHubLoader):
         """
         url: Optional[str] = self.url
         while url:
-            response = requests.get(url, headers=self.headers)
+            response = safe_requests.get(url, headers=self.headers)
             response.raise_for_status()
             issues = response.json()
             for issue in issues:

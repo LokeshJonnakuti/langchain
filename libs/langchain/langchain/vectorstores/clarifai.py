@@ -6,11 +6,10 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Iterable, List, Optional, Tuple
 
-import requests
-
 from langchain.docstore.document import Document
 from langchain.schema.embeddings import Embeddings
 from langchain.schema.vectorstore import VectorStore
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -271,7 +270,7 @@ class Clarifai(VectorStore):
         def hit_to_document(hit: resources_pb2.Hit) -> Tuple[Document, float]:
             metadata = json_format.MessageToDict(hit.input.data.metadata)
             h = {"Authorization": f"Key {self._auth.pat}"}
-            request = requests.get(hit.input.data.text.url, headers=h)
+            request = safe_requests.get(hit.input.data.text.url, headers=h)
 
             # override encoding by real educated guess as provided by chardet
             request.encoding = request.apparent_encoding

@@ -50,10 +50,9 @@ from typing import (
     cast,
 )
 
-import requests
-
 from langchain.docstore.document import Document
 from langchain.schema import BaseDocumentTransformer
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -550,7 +549,7 @@ class HTMLHeaderTextSplitter:
         Args:
             url: web URL
         """
-        r = requests.get(url)
+        r = safe_requests.get(url)
         return self.split_text_from_file(BytesIO(r.content))
 
     def split_text(self, text: str) -> List[Document]:

@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import json
 from typing import Optional, Type
-
-import requests
 import yaml
 
 from langchain.callbacks.manager import (
@@ -12,6 +10,7 @@ from langchain.callbacks.manager import (
 )
 from langchain.pydantic_v1 import BaseModel
 from langchain.tools.base import BaseTool
+from security import safe_requests
 
 
 class ApiConfig(BaseModel):
@@ -39,7 +38,7 @@ class AIPlugin(BaseModel):
     @classmethod
     def from_url(cls, url: str) -> AIPlugin:
         """Instantiate AIPlugin from a URL."""
-        response = requests.get(url).json()
+        response = safe_requests.get(url).json()
         return cls(**response)
 
 
@@ -80,7 +79,7 @@ class AIPluginTool(BaseTool):
             f"You should only call this ONCE! What is the "
             f"{plugin.name_for_human} API useful for? "
         ) + plugin.description_for_human
-        open_api_spec_str = requests.get(plugin.api.url).text
+        open_api_spec_str = safe_requests.get(plugin.api.url).text
         open_api_spec = marshal_spec(open_api_spec_str)
         api_spec = (
             f"Usage Guide: {plugin.description_for_model}\n\n"

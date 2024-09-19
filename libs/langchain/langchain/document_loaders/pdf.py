@@ -25,6 +25,7 @@ from langchain.document_loaders.parsers.pdf import (
 )
 from langchain.document_loaders.unstructured import UnstructuredFileLoader
 from langchain.utils import get_from_dict_or_env
+from security import safe_requests
 
 logger = logging.getLogger(__file__)
 
@@ -86,7 +87,7 @@ class BasePDFLoader(BaseLoader, ABC):
             temp_pdf = os.path.join(self.temp_dir.name, f"tmp{suffix}")
             self.web_path = self.file_path
             if not self._is_s3_url(self.file_path):
-                r = requests.get(self.file_path, headers=self.headers)
+                r = safe_requests.get(self.file_path, headers=self.headers)
                 if r.status_code != 200:
                     raise ValueError(
                         "Check the url of your file; returned status code %s"
@@ -431,7 +432,7 @@ class MathpixPDFLoader(BasePDFLoader):
         """
         url = self.url + "/" + pdf_id
         for _ in range(0, self.max_wait_time_seconds, 5):
-            response = requests.get(url, headers=self.headers)
+            response = safe_requests.get(url, headers=self.headers)
             response_data = response.json()
             status = response_data.get("status", None)
 
@@ -447,7 +448,7 @@ class MathpixPDFLoader(BasePDFLoader):
     def get_processed_pdf(self, pdf_id: str) -> str:
         self.wait_for_processing(pdf_id)
         url = f"{self.url}/{pdf_id}.{self.processed_file_format}"
-        response = requests.get(url, headers=self.headers)
+        response = safe_requests.get(url, headers=self.headers)
         return response.content.decode("utf-8")
 
     def clean_pdf(self, contents: str) -> str:

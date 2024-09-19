@@ -6,8 +6,7 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any, Callable, Optional, Set, TypeVar, Union
 from urllib.parse import urljoin
-
-import requests
+from security import safe_requests
 
 DEFAULT_REF = os.environ.get("LANGCHAIN_HUB_DEFAULT_REF", "master")
 URL_BASE = os.environ.get(
@@ -44,7 +43,7 @@ def try_load_from_hub(
     # path separator, regardless of the operating system.
     full_url = urljoin(URL_BASE.format(ref=ref), PurePosixPath(remote_path).__str__())
 
-    r = requests.get(full_url, timeout=5)
+    r = safe_requests.get(full_url, timeout=5)
     if r.status_code != 200:
         raise ValueError(f"Could not find file at {full_url}")
     with tempfile.TemporaryDirectory() as tmpdirname:

@@ -18,6 +18,7 @@ from langchain.callbacks.tracers.schemas import (
 )
 from langchain.schema.messages import get_buffer_string
 from langchain.utils import raise_for_status_with_text
+from security import safe_requests
 
 logger = logging.getLogger(__name__)
 
@@ -163,7 +164,7 @@ class LangChainTracerV1(BaseTracer):
             url = f"{self._endpoint}/sessions"
             if session_name:
                 url += f"?name={session_name}"
-            r = requests.get(url, headers=self._headers)
+            r = safe_requests.get(url, headers=self._headers)
 
             tracer_session = TracerSessionV1(**r.json()[0])
         except Exception as e:

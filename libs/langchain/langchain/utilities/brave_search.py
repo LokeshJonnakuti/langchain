@@ -5,6 +5,7 @@ import requests
 
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain.schema import Document
+from security import safe_requests
 
 
 class BraveSearchWrapper(BaseModel):
@@ -66,7 +67,7 @@ class BraveSearchWrapper(BaseModel):
         if req.url is None:
             raise ValueError("prepared url is None, this should not happen")
 
-        response = requests.get(req.url, headers=headers)
+        response = safe_requests.get(req.url, headers=headers)
         if not response.ok:
             raise Exception(f"HTTP error {response.status_code}")
 

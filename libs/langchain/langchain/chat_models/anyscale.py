@@ -6,8 +6,6 @@ import os
 import sys
 from typing import TYPE_CHECKING, Dict, Optional, Set
 
-import requests
-
 from langchain.adapters.openai import convert_message_to_dict
 from langchain.chat_models.openai import (
     ChatOpenAI,
@@ -17,6 +15,7 @@ from langchain.pydantic_v1 import Field, SecretStr, root_validator
 from langchain.schema.messages import BaseMessage
 from langchain.utils import convert_to_secret_str, get_from_dict_or_env
 from langchain.utils.openai import is_openai_v1
+from security import safe_requests
 
 if TYPE_CHECKING:
     import tiktoken
@@ -83,7 +82,7 @@ class ChatAnyscale(ChatOpenAI):
             ) from e
 
         models_url = f"{anyscale_api_base}/models"
-        models_response = requests.get(
+        models_response = safe_requests.get(
             models_url,
             headers={
                 "Authorization": f"Bearer {anyscale_api_key}",

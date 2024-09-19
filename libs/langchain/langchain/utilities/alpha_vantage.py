@@ -1,10 +1,9 @@
 """Util that calls AlphaVantage for Currency Exchange Rate."""
 from typing import Any, Dict, List, Optional
 
-import requests
-
 from langchain.pydantic_v1 import BaseModel, Extra, root_validator
 from langchain.utils import get_from_dict_or_env
+from security import safe_requests
 
 
 class AlphaVantageAPIWrapper(BaseModel):
@@ -35,7 +34,7 @@ class AlphaVantageAPIWrapper(BaseModel):
         self, from_currency: str, to_currency: str
     ) -> Dict[str, Any]:
         """Make a request to the AlphaVantage API to get the exchange rate."""
-        response = requests.get(
+        response = safe_requests.get(
             "https://www.alphavantage.co/query/",
             params={
                 "function": "CURRENCY_EXCHANGE_RATE",

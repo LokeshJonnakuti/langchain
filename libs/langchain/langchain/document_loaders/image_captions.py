@@ -1,10 +1,9 @@
 from io import BytesIO
 from typing import Any, List, Tuple, Union
 
-import requests
-
 from langchain.docstore.document import Document
 from langchain.document_loaders.base import BaseLoader
+from security import safe_requests
 
 
 class ImageCaptionLoader(BaseLoader):
@@ -77,7 +76,7 @@ class ImageCaptionLoader(BaseLoader):
             if isinstance(image, bytes):
                 image = Image.open(BytesIO(image)).convert("RGB")
             elif image.startswith("http://") or image.startswith("https://"):
-                image = Image.open(requests.get(image, stream=True).raw).convert("RGB")
+                image = Image.open(safe_requests.get(image, stream=True).raw).convert("RGB")
             else:
                 image = Image.open(image).convert("RGB")
         except Exception:

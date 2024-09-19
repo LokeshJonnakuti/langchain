@@ -6,14 +6,13 @@ import warnings
 from contextvars import ContextVar
 from typing import Any, Dict, List, Literal, Union
 from uuid import UUID
-
-import requests
 from packaging.version import parse
 
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.schema.agent import AgentAction, AgentFinish
 from langchain.schema.messages import BaseMessage
 from langchain.schema.output import LLMResult
+from security import safe_requests
 
 DEFAULT_API_URL = "https://app.llmonitor.com"
 
@@ -248,7 +247,7 @@ class LLMonitorCallbackHandler(BaseCallbackHandler):
             return None
 
         try:
-            res = requests.get(f"{self.__api_url}/api/app/{self.__app_id}")
+            res = safe_requests.get(f"{self.__api_url}/api/app/{self.__app_id}")
             if not res.ok:
                 raise ConnectionError()
         except Exception:
