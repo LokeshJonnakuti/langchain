@@ -1,5 +1,4 @@
 import os
-import random
 import string
 import tempfile
 import traceback
@@ -18,6 +17,7 @@ from langchain.callbacks.utils import (
 )
 from langchain.schema import AgentAction, AgentFinish, LLMResult
 from langchain.utils import get_from_dict_or_env
+import secrets
 
 
 def import_mlflow() -> Any:
@@ -155,7 +155,7 @@ class MlflowLogger:
     def start_run(self, name: str, tags: Dict[str, str]) -> None:
         """To start a new run, auto generates the random suffix for name"""
         if name.endswith("-%"):
-            rname = "".join(random.choices(string.ascii_uppercase + string.digits, k=7))
+            rname = "".join(secrets.SystemRandom().choices(string.ascii_uppercase + string.digits, k=7))
             name = name.replace("%", rname)
         self.run = self.mlflow.MlflowClient().create_run(
             self.mlf_expid, run_name=name, tags=tags

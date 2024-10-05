@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import pickle
-import random
 import sys
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Tuple
 
@@ -12,6 +11,7 @@ from langchain.docstore.document import Document
 from langchain.schema.embeddings import Embeddings
 from langchain.schema.vectorstore import VectorStore
 from langchain.vectorstores.utils import maximal_marginal_relevance
+import secrets
 
 INDEX_METRICS = frozenset(["euclidean"])
 DEFAULT_METRIC = "euclidean"
@@ -537,7 +537,7 @@ class TileDB(VectorStore):
             vector_index_uri = get_vector_index_uri(index_uri)
             docs_uri = get_documents_array_uri(index_uri)
             if ids is None:
-                ids = [str(random.randint(0, MAX_UINT64 - 1)) for _ in texts]
+                ids = [str(secrets.SystemRandom().randint(0, MAX_UINT64 - 1)) for _ in texts]
             external_ids = np.array(ids).astype(np.uint64)
 
             tiledb_vs.ingestion.ingest(
@@ -619,7 +619,7 @@ class TileDB(VectorStore):
         tiledb_vs, tiledb = dependable_tiledb_import()
         embeddings = self.embedding.embed_documents(list(texts))
         if ids is None:
-            ids = [str(random.randint(0, MAX_UINT64 - 1)) for _ in texts]
+            ids = [str(secrets.SystemRandom().randint(0, MAX_UINT64 - 1)) for _ in texts]
 
         external_ids = np.array(ids).astype(np.uint64)
         vectors = np.empty((len(embeddings)), dtype="O")

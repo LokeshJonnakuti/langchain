@@ -1,8 +1,8 @@
-import random
 import string
 
 from langchain.docstore.document import Document
 from langchain.document_loaders.pyspark_dataframe import PySparkDataFrameLoader
+import secrets
 
 
 def test_pyspark_loader_load_valid_data() -> None:
@@ -11,7 +11,7 @@ def test_pyspark_loader_load_valid_data() -> None:
     # Requires a session to be set up
     spark = SparkSession.builder.getOrCreate()
     data = [
-        (random.choice(string.ascii_letters), random.randint(0, 1)) for _ in range(3)
+        (secrets.choice(string.ascii_letters), secrets.SystemRandom().randint(0, 1)) for _ in range(3)
     ]
     df = spark.createDataFrame(data, ["text", "label"])
 

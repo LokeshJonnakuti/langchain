@@ -1,4 +1,4 @@
-import random
+import secrets
 
 adjectives = [
     "abandoned",
@@ -722,8 +722,8 @@ nouns = [
 
 def random_name(prefix: str = "test") -> str:
     """Generate a random name."""
-    adjective = random.choice(adjectives)
-    noun = random.choice(nouns)
-    number = random.randint(1, 100)
+    adjective = secrets.choice(adjectives)
+    noun = secrets.choice(nouns)
+    number = secrets.SystemRandom().randint(1, 100)
 
     return f"{prefix}-{adjective}-{noun}-{number}"

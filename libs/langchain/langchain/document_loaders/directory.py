@@ -9,6 +9,7 @@ from langchain.document_loaders.base import BaseLoader
 from langchain.document_loaders.html_bs import BSHTMLLoader
 from langchain.document_loaders.text import TextLoader
 from langchain.document_loaders.unstructured import UnstructuredFileLoader
+import secrets
 
 FILE_LOADER_TYPE = Union[
     Type[UnstructuredFileLoader], Type[TextLoader], Type[BSHTMLLoader]
@@ -121,7 +122,7 @@ class DirectoryLoader(BaseLoader):
         if self.sample_size > 0:
             if self.randomize_sample:
                 randomizer = (
-                    random.Random(self.sample_seed) if self.sample_seed else random
+                    secrets.SystemRandom().Random(self.sample_seed) if self.sample_seed else random
                 )
                 randomizer.shuffle(items)  # type: ignore
             items = items[: min(len(items), self.sample_size)]
